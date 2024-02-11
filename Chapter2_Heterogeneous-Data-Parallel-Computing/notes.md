@@ -56,6 +56,6 @@ void vecAdd(float* A_h, float* B_h, float* C_h, int n) {
 
 **Memory Management**
 - A GPU has a certain amount of *global device memory* or just *device memory* (DRAM), e.g., for A100s it's either 40GB or 80GB 
-- to allocate and release memory on device, CUDA uses the `cudaMalloc(ptr, size)` and `cudaFree(ptr)` functions, where `size` is the number of required bytes, and ptr is an address to either put stuff or free stuff from 
+- to allocate and release memory on device, CUDA uses the `cudaMalloc(ptr_address, size)` and `cudaFree(ptr)` functions, where `size` is the number of required bytes, `ptr_address` is the address of a pointer to either put stuff or free stuff from, and `ptr` is a pointer
 - these are like `malloc` and `free` in regular C, except `malloc` only takes a `size` input, not a pointer as well 
-- once you've allocated memory on device, you can transfer data from the host to the device (or back again, or within-device) using `cudaMemcpy`
+- once you've allocated memory on device, you can transfer data from the host to the device (or back again, or within-device) using `cudaMemcpy(destination, source, size, <transfer_type>)`, where `<transfer_type>` is either `cudaMemcpyHostToDevice`, `cudaMemcpyDeviceToHost`, or similar for Host-Host transfer or Device-Device transfer
