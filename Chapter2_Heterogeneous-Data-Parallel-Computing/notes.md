@@ -51,4 +51,11 @@ void vecAdd(float* A_h, float* B_h, float* C_h, int n) {
 }
 
 ```
-- Note that in this way of writing, the actually GPU-y part is totally hidden from the host code, which is nice for modularity, but also can be inefficient (e.g., you might want to keep big pieces of data on device for multiple function calls, rather than copying back and forth every time)
+- Note that in this way of writing things, the actually GPU-y part is totally hidden from the host code. This is called *transparent outsourcing*, which is nice for modularity, but also can be inefficient (e.g., you might want to keep big pieces of data on device for multiple function calls, rather than copying back and forth every time)
+
+
+**Memory Management**
+- A GPU has a certain amount of *global device memory* or just *device memory* (DRAM), e.g., for A100s it's either 40GB or 80GB 
+- to allocate and release memory on device, CUDA uses the `cudaMalloc(ptr, size)` and `cudaFree(ptr)` functions, where `size` is the number of required bytes, and ptr is an address to either put stuff or free stuff from 
+- these are like `malloc` and `free` in regular C, except `malloc` only takes a `size` input, not a pointer as well 
+- once you've allocated memory on device, you can transfer data from the host to the device (or back again, or within-device) using `cudaMemcpy`
