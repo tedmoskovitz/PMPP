@@ -8,8 +8,47 @@
 **2.2 CUDA C Program Structure**
 - CUDA C is just the base language with extra stuff tacked on (also starting to have more C++ features too)
 - *host* = CPU, *device* = GPU
-- regular C is just CUDA with only host code
+- regular C can be seen as just CUDA with only host code
 - you can add device code with *kernels,* which place data on device and launch a bunch of parallel threads --- the threads launched by a kernel are called a *grid*
 ![](figs/ch2_host-device.png)
 - above is example program, where things start on host, then a kernel launches a grid of threads, then the parallel part is over and control returns to host, etc. in more complicated programs, often have code running on host and device simultaneously
 - in the RGB -> grayscale example, the no. of threads would be equal to the no. of pixels in the image
+
+**A vector addition kernel**
+
+- Simple in-place vector addition in regular C:
+```c
+
+void vecAdd(float* A_h, float* B_h, float* C_h, int n) {
+
+    for (int i = 0; i < n; ++i) {
+        C_h[i] = A_h[i] + B_h[i];
+    }
+}
+
+int main() {
+
+    // allocate memory on host, etc
+
+    vecAdd(A, B, C, N);
+    // ...
+}
+```
+
+- To write a simple CUDA kernel for the same thing, you have to copy the data from host memory to device memory, launch threads/perform the computation, then copy the result back to host memory and free the memory used on the device
+
+```c
+
+void vecAdd(float* A_h, float* B_h, float* C_h, int n) {
+    int size = n * sizeof(float);
+    float *A_d, *B_d, *C_d;
+
+    // Part 1: allocate memory on device and copy from host
+
+    // Part 2: actually do the addition
+
+    // Part 3: copy the result back to host and free memory on device
+}
+
+```
+- Note that in this way of writing, the actually GPU-y part is totally hidden from the host code, which is nice for modularity, but also can be inefficient (e.g., you might want to keep big pieces of data on device for multiple function calls, rather than copying back and forth every time)
