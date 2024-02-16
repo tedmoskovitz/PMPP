@@ -80,7 +80,8 @@ int main() {
     printf("Parallel vector addition: %.3f seconds\n", elapsed_timep);
     // this will actually probably take longer than the serial version;
     // there's too much overhead relative to the amount of computation 
-    // happening
+    // happening (overhead wrt allocating/de-allocating device memory
+    // and transferring data to and from device)
 
 }
 
