@@ -1,5 +1,8 @@
-#define N_CHANNELS 3
+// simple image transformations: RGB -> grayscale + uniform blurring
+// compilation: nvcc image_transforms.cu -o image_transforms
+// launch: ./image_transforms
 
+#define N_CHANNELS 3
 
 __global__
 void colorToGrayscale(unsigned char * Im_in, unsigned char * Im_out, int height, int width) {
@@ -65,13 +68,14 @@ int main() {
     cudaMemcpy(gray_image_d, gray_image, size, cudaMemcpyHostToDevice);
 
     // call RGB -> grayscale kernel
-    int block_size = 256;
-    int n_blocks = ceil(size / (float)block_size); 
-    colorToGrayscale<<<n_blocks, block_size>>>(rgb_image_d, gray_image_d, height, width);
+    dim3 dimBlock(16, 16, 1);
+    // make enough 16 x 16 blocks of threads to cover the image dimensions
+    dim3 dimGrid(ceil(width / (float)dimBlock.x), ceil(height / (float)dimBlock.y), 1);
+    colorToGrayscale<<<dimGrid, dimBlock>>>(rgb_image_d, gray_image_d, height, width);
 
     // call blurring kernel
     int blurRadius = 1;
-    blurImage<<<n_blocks, block_size>>>(gray_image_d, height, width, blurRadius);
+    blurImage<<<dimGrid, dimBlock>>>(gray_image_d, height, width, blurRadius);
 
     // copy data back from device to host
     cudaMemcpy(gray_image, gray_image_d, size, cudaMemcpyDeviceToHost);
