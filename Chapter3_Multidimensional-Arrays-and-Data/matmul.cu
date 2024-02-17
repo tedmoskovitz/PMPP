@@ -1,9 +1,12 @@
-
+/*
+Simple kernel for N x N matrix multiplication
+compilation: nvcc matmul.cu -o matmul
+launch: ./matmul
+*/
+#include <stdio.h>
 
 #define N 3
 
-
-#include <stdio.h>
 
 void printMatrix(float* X) {
     for (int row = 0; row < N; ++row) {
