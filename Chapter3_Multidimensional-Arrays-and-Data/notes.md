@@ -8,8 +8,9 @@
 ```c
 int N = 50; // say, a 50 x 50 matrix
 dim3 blockDim(16, 16, 1); // use 16 x 16 blocks of threads
+//ceil(50/16) = 4 -> 64-50=14 extra threads
 int nGridRows = ceil(N / (float)blockDim.y);
-int nGridCols = ceil(N / (float)blockDim.x);
+int nGridCols = ceil(N / (float)blockDim.x); // 
 dim3 gridDim(nGridCols, nGridRows, 1);
 ```
 - In memory, matrices are stored in row-major order (as in, you take all the rows of a matrix and lay them out in a line)
