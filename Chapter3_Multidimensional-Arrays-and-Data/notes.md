@@ -2,7 +2,8 @@
 
 - As you could guess from the title, this chapter is about multidimensional grids and data -- the main new ``thing'' from the previous chapter is launching grids/kernels which use multidimensional data
 - For example, you might have a 2D grid of blocks, each containing a 3D array of threads:
-![[figs/ch3_block-grid.png]]
+![](figs/ch3_block-grid.png)
+<!-- ![[figs/ch3_block-grid.png]] -->
 - Basically, you use N dims depending on the dimensionality of your data, so you can easily compute columns, rows, etc. (because inside a kernel, you're using one thread, so you want the columns and rows, etc. of the block/grid of threads you launched to corresponds to columns/rows of the data you're operating on, e.g., pixels or matrix entries)
 - you specify these using a special 3D vector datatype, `dim3`, e.g., for 2D data:
 ```c
