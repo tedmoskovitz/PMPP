@@ -39,4 +39,8 @@ void incorrect_barrier(int n) {
 ```
 either all the threads in the block will execute the `if` path or the `else` path
 - this kind of set-up can also lead to deadlocks if threads are waiting for a condition to be true before proceeding
-- the runtime system also has to make sure each thread actually gets the resources it needs to complete execution
+- the runtime system also has to make sure each thread actually gets the resources it needs to complete execution, because if a thread gets stuck, this will also lead to a deadlock
+- the runtime system satisfies these constraints by assigning resources to all threads in a block as a unit, and simultaneous execution ensures that wait times aren't too long
+- one advantage of this segregation of resources by block is modularity---none of the blocks has to wait for another, so they can be executed in any order
+- this gives the system flexibility in scheduling--for low-power systems like mobile devices, only a few blocks may execute at a time, but in more powerful devices, more blocks can be executed simultaneously
+- this facilitates *transparent scalability*: the ability to execute the same code on different hardware
